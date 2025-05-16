@@ -11,7 +11,7 @@ namespace Datos
 {
     public class DataCustomer
     {
-        public readonly string connectionString = "Data Source=LAB1502-17;Initial Catalog=Semana7;Integrated Security=True;;TrustServerCertificate=True";
+        public readonly string connectionString = "Data Source=LAB1502-11;Initial Catalog=db_factura;Integrated Security=True;;TrustServerCertificate=True";
 
         public List<Customer> ObtenerCustomers()
         {
@@ -59,6 +59,41 @@ namespace Datos
                 command.ExecuteNonQuery();
             }
         }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("USP_UpdateCustomer", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@customer_id", customer.CustomerId);
+                command.Parameters.AddWithValue("@Name", customer.Name);
+                command.Parameters.AddWithValue("@Address", (object?)customer.Address ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Phone", (object?)customer.Phone ?? DBNull.Value);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteCustomer(Customer customer)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("USP_DeleteCustomer", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                
+                command.Parameters.AddWithValue("@Id", customer.CustomerId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+
+
 
 
     }

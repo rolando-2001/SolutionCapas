@@ -41,7 +41,8 @@
                 <!-- Barra superior -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <Button Name="btn1" Content="Listar Todos" Width="110" Height="35" Margin="5" Click="btn1_Click"/>
-                    <Button Name="btn2" Content="Otro Botón" Width="110" Height="35" Margin="5"/>
+                    <Button Name="btn2" Content="Actualizar" Width="110" Height="35" Margin="5"   Click="Button_Click"/>
+                    <Button Name="btn3" Content="Eliminar" Width="110" Height="35" Margin="5"   Click="btn3_Click"/>
                     <TextBox x:Name="txtSearch" Width="200" Height="35" Margin="15,5,0,5" 
                               
                              VerticalContentAlignment="Center"
@@ -56,6 +57,7 @@
                           HeadersVisibility="Column"
                           RowBackground="#FAFAFA"
                           AlternatingRowBackground="#EEEEEE"
+                          SelectionChanged="dgCustomer_SelectionChanged"
                           Margin="0,0,0,10"/>
 
                 <!-- Formulario para registrar cliente -->

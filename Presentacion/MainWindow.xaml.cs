@@ -18,6 +18,7 @@ namespace Presentacion
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Customer clienteSeleccionado;
         public MainWindow()
         {
             InitializeComponent();
@@ -64,6 +65,8 @@ namespace Presentacion
                 MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            BusinessCustomer businessCustomer = new BusinessCustomer();
+            
 
             Customer nuevo = new Customer
             {
@@ -75,8 +78,52 @@ namespace Presentacion
 
             try
             {
-                BusinessCustomer businessCustomer = new BusinessCustomer();
+                
                 businessCustomer.AddCustomer(nuevo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al registrar cliente: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+
+        private void dgCustomer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (dgCustomer.SelectedItem is Customer seleccionado)
+            {
+                clienteSeleccionado = seleccionado;
+                txtNombre.Text = seleccionado.Name;
+                txtDireccion.Text = seleccionado.Address;
+                txtTelefono.Text = seleccionado.Phone;
+            }
+        }
+
+
+
+        private bool UpdateC()
+        {
+            string nombre = txtNombre.Text.Trim();
+            string direccion = txtDireccion.Text.Trim();
+            string telefono = txtTelefono.Text.Trim();
+
+
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            clienteSeleccionado.Name= nombre;
+            clienteSeleccionado.Address= direccion;
+            clienteSeleccionado.Phone = telefono;
+
+            try
+            {
+                BusinessCustomer businessCustomer = new BusinessCustomer();
+                businessCustomer.UpdateCustomer(clienteSeleccionado);
                 return true;
             }
             catch (Exception ex)
@@ -103,9 +150,60 @@ namespace Presentacion
             }
         }
 
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (UpdateC())
+            {
+                MessageBox.Show("Cliente Actulizado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                txtNombre.Text = "";
+                txtDireccion.Text = "";
+                txtTelefono.Text = "";
+
+
+                BusinessCustomer businessCustomer = new BusinessCustomer();
+                dgCustomer.ItemsSource = businessCustomer.ListCustomer();
+            }
         }
+
+
+
+        private void btn3_Click(object sender, RoutedEventArgs e)
+        {
+            if (clienteSeleccionado == null)
+            {
+                MessageBox.Show("Por favor, selecciona un cliente para eliminar.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            
+            var result = MessageBox.Show($"¿Seguro que quieres eliminar al cliente {clienteSeleccionado.Name}?", "Confirmar eliminación", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    BusinessCustomer businessCustomer = new BusinessCustomer();
+                    businessCustomer.DeleteCustomer(clienteSeleccionado);
+
+                    MessageBox.Show("Cliente eliminado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                   
+                    txtNombre.Text = "";
+                    txtDireccion.Text = "";
+                    txtTelefono.Text = "";
+                    clienteSeleccionado = null;
+
+                    
+                    dgCustomer.ItemsSource = businessCustomer.ListCustomer();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar cliente: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
     }
 }

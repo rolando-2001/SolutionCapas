@@ -33,5 +33,15 @@ namespace Negocio
             DataCustomer data = new DataCustomer();
             data.CrearCustomer(customer);
         }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            DataCustomer data = new DataCustomer();
+            data.UpdateCustomer(customer);
+        }
+        public void DeleteCustomer(Customer customer) {
+            DataCustomer data = new DataCustomer();
+            data.DeleteCustomer(customer);
+        }
     }
 }
