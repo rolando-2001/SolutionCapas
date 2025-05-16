@@ -45,7 +45,7 @@ namespace Presentacion
             }
             else
             {
-                // Si está vacío, mostramos todos los clientes
+                
                 var todos = businessCustomer.ListCustomer();
                 dgCustomer.ItemsSource = todos;
             }
